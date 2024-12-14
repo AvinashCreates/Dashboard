@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Your Agency</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.18.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .widget {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .dark-mode {
+      background-color: #1a202c;
+      color: #a0aec0;
+    }
+    .sidebar-item:hover {
+      background-color: #4a5568;
+      cursor: pointer;
+    }
+    .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      left: 100%;
+      top: 0;
+      background-color: #2d3748;
+      width: 200px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .dropdown {
+      position: relative;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <!-- Dashboard Container -->
+  <div class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white py-4 px-6 flex justify-between items-center">
+      <img class="h-10 w-10 rounded-full" src='user_img1.png'>
+      <h1 class="text-2xl font-bold">Your Agency Dashboard</h1>
+      <button id="darkModeToggle" class="bg-gray-800 text-red px-4 py-2 rounded-full mr-10">☼</button>
+      <button onclick="openLoginForm()" class="bg-gray-800 text-white px-4 py-2 rounded-full">Login</button>
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex flex-1">
+      <!-- Sidebar -->
+      <nav class="bg-gray-800 text-white w-64 p-4 space-y-6">
+        <h2 class="text-xl font-bold">Your Agency</h2>
+        <ul class="space-y-4">
+          <!-- Dashboard with hover dropdown -->
+          <li class="flex items-center space-x-2 sidebar-item dropdown">
+            <span class="material-icons">home</span>
+            <a href="javascript:void(0)" onclick="showSection('dashboard')" class="hover:bg-gray-700 block py-2 px-4 rounded">Dashboard</a>
+            <!-- Hover dropdown for Dashboard -->
+            <ul class="dropdown-menu space-y-2">
+              <li><a href="javascript:void(0)" onclick="showSection('calendar')" class="block py-2 px-4 hover:bg-gray-700">Calendar</a></li>
+              <li><a href="javascript:void(0)" onclick="showSection('timeTracker')" class="block py-2 px-4 hover:bg-gray-700">Time Tracker</a></li>
+              <li><a href="javascript:void(0)" onclick="showSection('analytics')" class="block py-2 px-4 hover:bg-gray-700">Analytics</a></li>
+            </ul>
+          </li>
+
+        <!-- Direct links under Dashboard -->
+        <li class="flex items-center space-x-2 sidebar-item">
+          <span class="material-icons">request_quote</span>
+          <a href="javascript:void(0)" onclick="showSection('requests')" class="hover:bg-gray-700 block py-2 px-4 rounded">Requests</a>
+        </li>
+        <li class="flex items-center space-x-2 sidebar-item">
+          <span class="material-icons">people</span>
+          <a href="javascript:void(0)" onclick="showSection('users')" class="hover:bg-gray-700 block py-2 px-4 rounded">Users</a>
+        </li>
+        <li class="flex items-center space-x-2 sidebar-item">
+          <span class="material-icons">build</span>
+          <a href="javascript:void(0)" onclick="showSection('services')" class="hover:bg-gray-700 block py-2 px-4 rounded">Services</a>
+        </li>
+        <li class="flex items-center space-x-2 sidebar-item">
+          <span class="material-icons">message</span>
+          <a href="javascript:void(0)" onclick="showSection('messages')" class="hover:bg-gray-700 block py-2 px-4 rounded">Messages</a>
+        </li>
+        <li class="flex items-center space-x-2 sidebar-item">
+          <span class="material-icons">receipt</span>
+          <a href="javascript:void(0)" onclick="showSection('invoices')" class="hover:bg-gray-700 block py-2 px-4 rounded">Invoices</a>
+        </li>
+        <li class="flex items-center space-x-2 sidebar-item">
+          <span class="material-icons">settings</span>
+          <a href="javascript:void(0)" onclick="showSection('settings')" class="hover:bg-gray-700 block py-2 px-4 rounded">Settings</a>
+        </li>
+      </ul>
+    </nav>
+      </nav>
+
+      <!-- Content Area -->
+      <div class="flex-1 p-6 space-y-6">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="widget bg-white p-4 rounded-lg">
+          <h2 class="text-xl font-bold mb-4">Tasks</h2>
+          <div>
+            <input type="text" id="taskInput" class="border p-2 w-full mb-2" placeholder="Add a new task">
+            <select id="taskCategory" class="border p-2 w-full mb-2">
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Others">Others</option>
+            </select>
+            <select id="taskPriority" class="border p-2 w-full mb-4">
+              <option value="High">High Priority</option>
+              <option value="Medium">Medium Priority</option>
+              <option value="Low">Low Priority</option>
+            </select>
+            <button onclick="addTask()" class="bg-blue-600 text-white px-4 py-2 rounded">Add Task</button>
+          </div>
+          <ul id="taskList" class="mt-4 space-y-2">
+            <!-- Tasks will be added here dynamically -->
+          </ul>
+        </section>
+
+        <!-- Calendar Section -->
+        <section id="calendar" class="widget bg-white p-4 rounded-lg hidden">
+          <h2 class="text-xl font-bold mb-4">Calendar</h2>
+          <div id="calendar"></div>
+        </section>
+
+        <!-- Time Tracker Section -->
+        <section id="timeTracker" class="widget bg-white p-4 rounded-lg hidden">
+          <h2 class="text-xl font-bold mb-4">Time Tracker</h2>
+          <p id="timeDisplay" class="text-lg">00:00:00</p>
+          <button onclick="startTracking()" class="bg-green-600 text-white px-4 py-2 rounded">Start</button>
+          <button onclick="stopTracking()" class="bg-red-600 text-white px-4 py-2 rounded">Stop</button>
+        </section>
+ 
+        <!-- Analytics Section -->
+        <section id="analytics" class="widget bg-white p-4 rounded-lg hidden">
+          <h2 class="text-xl font-bold mb-4">Analytics</h2>
+          <div class="button-container mb-4">
+            <button onclick="ongoing1()" class="bg-blue-600 text-white px-4 py-2 rounded">Add to Ongoing</button>
+            <button onclick="addnew()" class="bg-green-600 text-white px-4 py-2 rounded">Add</button>
+            <button onclick="completed2()" class="bg-purple-600 text-white px-4 py-2 rounded">Mark as Completed</button>
+          </div>
+          <div class="chart-container">
+            <!-- Reduced size of pie chart to fit viewport -->
+            <canvas id="pieChart" width="50%" height="50%"></canvas>
+          </div>
+        </section>
+              <!-- Other Sections -->
+        <section id="requests" class="widget bg-white p-4 rounded-lg hidden">
+          <h2 class="text-xl font-bold mb-4">Requests</h2>
+          <p>Manage your requests here...</p>
+        </section>
+        <section id="users" class="widget bg-white p-4 rounded-lg hidden">
+          <h2 class="text-xl font-bold mb-4">Users</h2>
+          <p>Manage your users here...</p>
+        </section>
+        <section id="services" class="widget bg-white p-4 rounded-lg hidden">
+          <h2 class="text-xl font-bold mb-4">Services</h2>
+          <p>Manage your services here...</p>
+        </section>
+        <section id="messages" class="widget bg-white p-4 rounded-lg hidden">
+          <h2 class="text-xl font-bold mb-4">Messages</h2>
+          <p>Manage your messages here...</p>
+        </section>
+        <section id="invoices" class="widget bg-white p-4 rounded-lg hidden">
+          <h2 class="text-xl font-bold mb-4">Invoices</h2>
+          <p>Manage your invoices here...</p>
+        </section>
+        <section id="settings" class="widget bg-white p-4 rounded-lg hidden">
+          <h2 class="text-xl font-bold mb-4">Settings</h2>
+          <p>Manage your settings here...</p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle dark mode
+    document.getElementById('darkModeToggle').addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+    });
+
+    // Show selected section
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll('section');
+      sections.forEach(section => section.classList.add('hidden'));
+      const selectedSection = document.getElementById(sectionId);
+      selectedSection.classList.remove('hidden');
+    }
+
+     // Pie Chart Code
+     let completed = 0;
+    let incomplete = 0;
+    let ongoing = 0;
+    let ctx = document.getElementById('pieChart').getContext('2d');
+
+    let pieChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Completed', 'Incomplete', 'Ongoing'],
+        datasets: [{
+          data: [completed, incomplete, ongoing],
+          backgroundColor: ['#4BC0C0', '#FF6384', '#36A2EB'],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Task Progress Overview'
+          }
+        }
+      }
+    });
+    function addnew() {
+      incomplete++;
+      updateChart();
+    }
+
+    function completed2() {
+      if (ongoing > 0 || incomplete > 0) {
+        if (ongoing > 0) ongoing--;
+        if (incomplete > 0) incomplete--;
+        completed++;
+        updateChart();
+      }
+    }
+
+    function ongoing1() {
+      if (incomplete > 0) {
+        incomplete--;
+        ongoing++;
+        updateChart();
+      }
+    }
+
+    function updateChart() {
+      pieChart.data.datasets[0].data = [completed, incomplete, ongoing];
+      pieChart.update();
+    }
+
+
+    // Add task function
+    function addTask() {
+      let taskInput = document.getElementById('taskInput').value;
+      let taskCategory = document.getElementById('taskCategory').value;
+      let taskPriority = document.getElementById('taskPriority').value;
+      let taskList = document.getElementById('taskList');
+
+      let taskItem = document.createElement('li');
+      taskItem.classList.add('p-2', 'bg-gray-100', 'rounded-lg', 'shadow-sm');
+      taskItem.innerHTML = `
+        <strong>${taskInput}</strong><br>
+        <span class="text-sm text-gray-500">${taskCategory} - ${taskPriority}</span>
+      `;
+
+      taskList.appendChild(taskItem);
+      document.getElementById('taskInput').value = '';  // Clear the input field
+    }
+
+    // Time Tracker Functions
+    let timer;
+    let seconds = 0;
+
+    function startTracking() {
+      timer = setInterval(function() {
+        seconds++;
+        document.getElementById('timeDisplay').textContent = formatTime(seconds);
+      }, 1000);
+    }
+
+    function stopTracking() {
+      clearInterval(timer);
+    }
+
+    function formatTime(seconds) {
+      let hours = Math.floor(seconds / 3600);
+      let minutes = Math.floor((seconds % 3600) / 60);
+      let sec = seconds % 60;
+      return `${pad(hours)}:${pad(minutes)}:${pad(sec)}`;
+    }
+
+    function pad(value) {
+      return value < 10 ? '0' + value : value;
+    }
+
+    // Functions for Analytics
+    function ongoing1() {
+      ongoing++;
+      updateChart();
+    }
+
+    function addnew() {
+      incomplete++;
+      updateChart();
+    }
+
+    function completed2() {
+      completed++;
+      updateChart();
+    }
+
+    function updateChart() {
+      pieChart.data.datasets[0].data = [completed, incomplete, ongoing];
+      pieChart.update();
+    }
+
+  </script>
+</body>
+</html>
